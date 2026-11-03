@@ -3,7 +3,7 @@
 # First start (registration tokens expire after an hour):
 #   cd runner
 #   echo "RUNNER_TOKEN=$(GH_HOST=github.mieweb.com gh api -X POST \
-#     repos/rgingras/ozwell-reading-comfort/actions/runners/registration-token -q .token)" > .env
+#     repos/rgingras/better-ozwell/actions/runners/registration-token -q .token)" > .env
 #   docker compose up -d
 #
 # The registration is kept in the runner-config volume, so later restarts
@@ -16,7 +16,7 @@ services:
     restart: unless-stopped
     environment:
       RUNNER_SCOPE: repo
-      REPO_URL: https://github.mieweb.com/rgingras/ozwell-reading-comfort
+      REPO_URL: https://github.mieweb.com/rgingras/better-ozwell
       RUNNER_NAME: better-ozwell-${HOSTNAME:-laptop}
       LABELS: linux,x64,better-ozwell
       RUNNER_TOKEN: ${RUNNER_TOKEN:-}
