@@ -65,7 +65,7 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/')
         env:
           GH_TOKEN: ${{ github.token }}
-          GH_HOST: ${{ github.server_url && 'github.mieweb.com' }}
+          GH_HOST: github.mieweb.com   # gh defaults to github.com
         run: |
           # (upload-artifact@v4 isn't supported on GitHub Enterprise Server, so the
           # release is the only place the signed .xpi is kept)
