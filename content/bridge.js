@@ -1,5 +1,5 @@
 /*
- * Ozwell - Reading Comfort: bridge (isolated content script)
+ * Better Ozwell: bridge (isolated content script)
  *
  * - Adds the stylesheet as the last <style> in <head>, so it overrides the
  *   site's own CSS as a user style would (manifest-injected CSS would load

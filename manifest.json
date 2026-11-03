@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Ozwell Reading Comfort",
+  "name": "Better Ozwell",
   "version": "1.0.0",
   "description": "Reading comfort tweaks for Ozwell (ozwell.ai), plus a debug popup with the model, context usage and conversation JSON.",
   "author": "Robert Gingras",
@@ -14,7 +14,7 @@
   "permissions": ["storage"],
   "host_permissions": ["https://ozwell.ai/*", "https://*.ozwell.ai/*"],
   "action": {
-    "default_title": "Ozwell debug",
+    "default_title": "Better Ozwell",
     "default_popup": "popup/popup.html",
     "default_icon": { "16": "icons/icon-16.png", "32": "icons/icon-32.png" }
   },
@@ -43,7 +43,7 @@
   ],
   "browser_specific_settings": {
     "gecko": {
-      "id": "ozwell-reading-comfort@rgingras.mieweb.com",
+      "id": "better-ozwell@rgingras.mieweb.com",
       "strict_min_version": "140.0",
       "data_collection_permissions": { "required": ["none"] }
     }

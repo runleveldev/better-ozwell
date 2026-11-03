@@ -1,7 +1,7 @@
-# Ozwell Reading Comfort
+# Better Ozwell
 
 A Firefox (and Chrome) extension for [Ozwell](https://app.ozwell.ai) that replaces
-the "Ozwell - Reading Comfort" Stylus style and Tampermonkey scripts:
+the earlier "Ozwell - Reading Comfort" Stylus style and Tampermonkey scripts:
 
 - **Reading styles:** centred, width-capped message column; system font instead of
   Nunito; chat history pinned open on desktop with a compact list; tighter

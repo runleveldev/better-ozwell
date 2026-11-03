@@ -1,5 +1,5 @@
 /*
- * Ozwell - Reading Comfort: page script
+ * Better Ozwell: page script
  *
  * Runs in the page's own JavaScript world ("world": "MAIN"), because it uses
  * the app's Meteor objects and require(). Settings arrive from bridge.js
