@@ -51,6 +51,10 @@ jobs:
           WEB_EXT_API_KEY: ${{ secrets.AMO_JWT_ISSUER }}
           WEB_EXT_API_SECRET: ${{ secrets.AMO_JWT_SECRET }}
         run: |
+          if [ -z "$WEB_EXT_API_KEY" ] || [ -z "$WEB_EXT_API_SECRET" ]; then
+            echo "::error::Set the AMO_JWT_ISSUER and AMO_JWT_SECRET repository secrets (https://addons.mozilla.org/developers/addon/api/key/)"
+            exit 1
+          fi
           npx --yes web-ext@8 sign \
             --channel unlisted \
             --ignore-files icons/icon.svg README.md package.json .github \

@@ -49,6 +49,18 @@ Ozwell tabs immediately. Style values are CSS (`800px`, `1.7`, `none`, …).
 | `popup/` | Debug popup. Context window sizes live in `popup.js` (`CONTEXT_WINDOWS`); the app doesn't record them. |
 | `options/` | Settings page. |
 
+## Releases
+
+Push a tag matching the manifest version (`git tag v1.0.1 && git push origin v1.0.1`).
+`.github/workflows/release.yml` lints, signs the extension on addons.mozilla.org
+as unlisted, and attaches the signed `.xpi` to a GitHub release.
+
+- Needs repository secrets `AMO_JWT_ISSUER` and `AMO_JWT_SECRET` from
+  https://addons.mozilla.org/developers/addon/api/key/.
+- Bump `version` in `manifest.json` first; AMO won't sign a version twice.
+- Runs on a self-hosted runner (github.mieweb.com has no GitHub-hosted ones):
+  `runner/compose.yml` runs it in Docker; setup steps are in that file.
+
 ## Development
 
 ```sh
