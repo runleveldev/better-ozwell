@@ -24,7 +24,9 @@ permissions:
 
 jobs:
   sign:
-    runs-on: ubuntu-latest
+    # Self-hosted runner from runner/compose.yml (github.mieweb.com has no
+    # GitHub-hosted runners)
+    runs-on: [self-hosted, better-ozwell]
     steps:
       - uses: actions/checkout@v4
 
