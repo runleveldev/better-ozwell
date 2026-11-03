@@ -61,16 +61,15 @@ jobs:
             --artifacts-dir web-ext-artifacts \
             --approval-timeout 900000
 
-      - uses: actions/upload-artifact@v4
-        with:
-          name: better-ozwell-xpi
-          path: web-ext-artifacts/*.xpi
-
       - name: Attach to a GitHub release
         if: startsWith(github.ref, 'refs/tags/')
         env:
           GH_TOKEN: ${{ github.token }}
+          GH_HOST: ${{ github.server_url && 'github.mieweb.com' }}
         run: |
-          gh release create "$GITHUB_REF_NAME" web-ext-artifacts/*.xpi \
+          # (upload-artifact@v4 isn't supported on GitHub Enterprise Server, so the
+          # release is the only place the signed .xpi is kept)
+          cp web-ext-artifacts/*.xpi "better-ozwell-${GITHUB_REF_NAME#v}.xpi"
+          gh release create "$GITHUB_REF_NAME" "better-ozwell-${GITHUB_REF_NAME#v}.xpi" \
             --title "Better Ozwell $GITHUB_REF_NAME" \
             --notes "Signed by addons.mozilla.org (unlisted). Install by opening the .xpi in Firefox."
