@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Ozwell Reading Comfort – Settings</title>
+  <link rel="stylesheet" href="../common/ui.css">
+  <style>
+    body { max-width: 640px; margin: 0 auto; padding: 16px; }
+    label { display: flex; gap: 8px; align-items: flex-start; padding: 4px 0; }
+    .hint { display: block; color: var(--muted); font-size: 12px; }
+    .var { display: grid; grid-template-columns: 1fr 220px; gap: 8px; align-items: center; padding: 3px 0; }
+    .var input { font: 12px ui-monospace, monospace; padding: 3px 6px; border: 1px solid var(--line); border-radius: 4px; background: var(--bg); color: var(--fg); }
+    .actions { margin-top: 16px; display: flex; gap: 8px; align-items: center; }
+  </style>
+</head>
+<body>
+  <h1 style="font-size:16px">Ozwell Reading Comfort</h1>
+  <p class="muted">Changes apply to open Ozwell tabs immediately.</p>
+
+  <h2>Page styles</h2>
+  <label><input type="checkbox" id="styles"> <span>Apply the reading styles (column width, fonts, pinned sidebar, compact menus, code blocks…)</span></label>
+
+  <h2>Features</h2>
+  <div id="features"></div>
+
+  <h2>Style settings</h2>
+  <p class="muted">CSS values. Leave a box empty to use the default shown.</p>
+  <div id="vars"></div>
+
+  <div class="actions">
+    <button id="reset">Reset all to defaults</button>
+    <span id="status" class="muted"></span>
+  </div>
+
+  <script src="../common/settings.js"></script>
+  <script src="options.js"></script>
+</body>
+</html>

@@ -1,0 +1,51 @@
+{
+  "manifest_version": 3,
+  "name": "Ozwell Reading Comfort",
+  "version": "1.0.0",
+  "description": "Reading comfort tweaks for Ozwell (ozwell.ai), plus a debug popup with the model, context usage and conversation JSON.",
+  "author": "Robert Gingras",
+  "icons": {
+    "16": "icons/icon-16.png",
+    "32": "icons/icon-32.png",
+    "48": "icons/icon-48.png",
+    "96": "icons/icon-96.png",
+    "128": "icons/icon-128.png"
+  },
+  "permissions": ["storage"],
+  "host_permissions": ["https://ozwell.ai/*", "https://*.ozwell.ai/*"],
+  "action": {
+    "default_title": "Ozwell debug",
+    "default_popup": "popup/popup.html",
+    "default_icon": { "16": "icons/icon-16.png", "32": "icons/icon-32.png" }
+  },
+  "options_ui": {
+    "page": "options/options.html",
+    "open_in_tab": true
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://ozwell.ai/*", "https://*.ozwell.ai/*"],
+      "js": ["common/settings.js", "content/bridge.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["https://ozwell.ai/*", "https://*.ozwell.ai/*"],
+      "js": ["content/page.js"],
+      "run_at": "document_idle",
+      "world": "MAIN"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["content/style.css"],
+      "matches": ["https://ozwell.ai/*", "https://*.ozwell.ai/*"]
+    }
+  ],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "ozwell-reading-comfort@rgingras.mieweb.com",
+      "strict_min_version": "140.0",
+      "data_collection_permissions": { "required": ["none"] }
+    }
+  }
+}

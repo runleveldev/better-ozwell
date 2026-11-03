@@ -1,0 +1,16 @@
+{
+  "name": "ozwell-reading-comfort",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Reading comfort tweaks and a debug popup for Ozwell (ozwell.ai)",
+  "author": "Robert Gingras <rgingras@mieweb.com>",
+  "license": "MIT",
+  "scripts": {
+    "lint": "web-ext lint --ignore-files icons/icon.svg",
+    "build": "web-ext build --overwrite-dest --ignore-files icons/icon.svg README.md package.json",
+    "start": "web-ext run --start-url https://app.ozwell.ai/"
+  },
+  "devDependencies": {
+    "web-ext": "^8.0.0"
+  }
+}

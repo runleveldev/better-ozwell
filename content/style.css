@@ -1,0 +1,438 @@
+/*
+ * Ozwell - Reading Comfort: page styles
+ *
+ * Injected on *.ozwell.ai by the extension. The --ozw-* variables in the
+ * Settings block are defaults; the options page overrides them by setting the
+ * same variables on <html> (inline, so they win).
+ */
+
+/* =====================================================================
+   Settings
+   ===================================================================== */
+:root {
+  /* Fonts */
+  --ozw-font-sans: ui-sans-serif, -apple-system, system-ui, "Segoe UI",
+                   Helvetica, Arial, sans-serif,
+                   "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+
+  /* Reading column */
+  --ozw-column-width: 800px;         /* max width of messages and input box */
+  --ozw-column-min-gutter: 16px;     /* side padding on narrow windows */
+  --ozw-text-size: 16px;             /* message body text */
+  --ozw-text-line-height: 1.7;
+
+  /* Chat history sidebar (pinned at 992px wide and up) */
+  --ozw-sidebar-width: 320px;
+  --ozw-sidebar-title-size: 0.9rem;
+  --ozw-sidebar-row-padding: 0.4rem; /* vertical padding per entry */
+  --ozw-sidebar-summary: none;       /* AI summary under each title: none | block */
+  --ozw-sidebar-date: none;          /* date line: none | inline */
+  /* Current chat highlight. "initial" means follow the light/dark theme;
+     set a colour such as #dbeafe to override it. */
+  --ozw-current-chat-bg: initial;
+  --ozw-current-chat-accent: initial;   /* bar on the left edge */
+
+  /* Message "..." overflow menu */
+  --ozw-menu-font-size: 14px;
+  --ozw-menu-min-width: 180px;
+  --ozw-menu-item-padding: 0.3rem 0.75rem;
+  --ozw-menu-icons: none;            /* icons in front of labels: none | inline-block */
+
+  /* Suggested-prompt buttons under the chat */
+  --ozw-suggestions: none;           /* none | flex */
+
+  /* Code blocks */
+  --ozw-code-line-height: 1.5;       /* stripes and numbers are sized from this */
+  --ozw-code-stripe: rgba(127, 127, 127, 0.08); /* use transparent to turn off */
+  --ozw-code-line-numbers: block;    /* block | none */
+  --ozw-code-gutter: 3.5em;          /* space for numbers; set 0 when they're off */
+  --ozw-code-number-opacity: 0.4;
+   
+   /* User prompt bubble spacing */
+   --ozw-bubble-padding-y: 0.6rem;    /* top and bottom padding in user bubbles */
+   --ozw-bubble-max-width: 70%;       /* widest a prompt bubble can grow (site: 90%) */
+}
+
+/* =====================================================================
+   Fonts
+   ===================================================================== */
+:root {
+  --bs-font-sans-serif: var(--ozw-font-sans);
+}
+
+/* No !important, so class-based Font Awesome and <code> rules still win */
+* {
+  font-family: var(--bs-font-sans-serif);
+}
+
+/* Highlighted code tokens inherit monospace from <pre>/<code> instead of matching * */
+pre *,
+code * {
+  font-family: inherit !important;
+}
+
+/* =====================================================================
+   Reading column
+   ===================================================================== */
+/* The scroller stays full width so the side margins scroll; padding centres it */
+.chat-box .message-area {
+  --ozw-column-pad: max(var(--ozw-column-min-gutter),
+                        calc((100% - var(--ozw-column-width)) / 2));
+  padding-left: var(--ozw-column-pad) !important;
+  padding-right: var(--ozw-column-pad) !important;
+}
+
+/* The input footer matches the message column */
+.chat-box .chat-box-footer {
+  width: 100% !important;
+  max-width: var(--ozw-column-width);
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* Message text. Dropdown <li>s are excluded so menus keep their own size. */
+.message-area p,
+.message-area li:not(.dropdown-menu li) {
+  font-size: var(--ozw-text-size);
+  line-height: var(--ozw-text-line-height);
+}
+
+/* Suggested-prompt buttons */
+#action-buttons {
+  display: var(--ozw-suggestions) !important;
+}
+
+/* =====================================================================
+   Chat header: title only
+   ===================================================================== */
+/* The AI summary under the title (and its blank placeholder on untitled
+   chats). It's the second <div> after the title row; the shared-encounter
+   badge that follows is a different template and stays. */
+#session-header-desktop .text-wrapper > div.text-secondary.fs-5 {
+  display: none !important;
+}
+
+/* "Edit session title" pencil: only while hovering the title row (title or
+   pencil), or when it has keyboard focus. Opacity, not display, so the title
+   doesn't shift and the pencil stays reachable with Tab. */
+#session-header-desktop .text-wrapper a.session-title {
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+#session-header-desktop .text-wrapper > div:has(> span > a.session-title):hover a.session-title,
+#session-header-desktop .text-wrapper a.session-title:focus-visible {
+  opacity: 1;
+}
+
+/* Icon-only header actions; their labels become tooltips (every link has a
+   title except "Report session", which the companion script adds). The
+   labels stay in the page for screen readers. */
+#session-header-desktop .nav .nav-label {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  overflow: hidden !important;
+  clip-path: inset(50%) !important;
+  white-space: nowrap !important;
+}
+/* The row was an inline-flex box on a text line, which added space under it;
+   as a block-level flex row it sits directly under the title. */
+#session-header-desktop .nav {
+  display: flex !important;
+  gap: 0.125rem !important;              /* was gap-3 (1rem) */
+  margin: 0 0 0.375rem !important;       /* a little room above the header's bottom edge */
+}
+/* Same for the title: an inline-block in an .h2 leaves room for descenders */
+#session-header-desktop .text-wrapper {
+  display: block !important;
+}
+#session-header-desktop .nav .nav-item {
+  padding: 0 !important;                 /* was p-2 */
+}
+/* Bootstrap's .nav-link adds 0.5rem 1rem of its own; this is the hit area now */
+#session-header-desktop .nav .nav-link {
+  padding: 0.25rem 0.4rem !important;
+  gap: 0.35rem !important;               /* icon to badge, e.g. artifact count */
+}
+
+/* =====================================================================
+   Chat history sidebar: pinned open on desktop
+   ===================================================================== */
+/* Media queries can't read CSS variables; 992px is Bootstrap's "lg" breakpoint */
+@media (min-width: 992px) {
+  #offcanvasChatHistory {
+    --bs-offcanvas-width: var(--ozw-sidebar-width);
+    width: var(--ozw-sidebar-width);
+    visibility: visible !important;
+    transform: none !important;
+    z-index: 1030;                   /* below modals and dropdowns */
+  }
+
+  /* No dimming backdrop */
+  .offcanvas-backdrop {
+    display: none !important;
+  }
+
+  /* Push the page right; undo Bootstrap's scroll lock if the panel is "open" */
+  body {
+    padding-left: var(--ozw-sidebar-width) !important;
+    overflow: auto !important;
+  }
+
+  /* The close button does nothing useful while pinned */
+  #offcanvasChatHistory [data-bs-dismiss="offcanvas"] {
+    display: none;
+  }
+
+  /* Nor does the open button. Hidden rather than removed, so the companion
+     script can still click it to load the chat list. */
+  .chat-history-wrapper .chat-history {
+    display: none !important;
+  }
+
+  /* The session header leaves 42px on its left for that button */
+  #session-header-desktop {
+    margin-left: 0 !important;
+  }
+}
+
+/* =====================================================================
+   Chat history sidebar: compact list
+   ===================================================================== */
+#offcanvasChatHistory .session-select {
+  padding-top: var(--ozw-sidebar-row-padding) !important;
+  padding-bottom: var(--ozw-sidebar-row-padding) !important;
+  border: 0 !important;              /* no dividers between entries */
+  border-radius: 0.375rem;
+}
+
+#offcanvasChatHistory .session-select h5 {
+  font-size: var(--ozw-sidebar-title-size) !important;
+  font-weight: 600;
+  margin-bottom: 0.15rem !important;
+}
+
+/* AI summary under each title */
+#offcanvasChatHistory .session-select > .col-12.mb-1.small {
+  display: var(--ozw-sidebar-summary) !important;
+}
+
+/* Date line */
+#offcanvasChatHistory .session-select > small {
+  display: var(--ozw-sidebar-date) !important;
+}
+
+/* Current chat. The app's own .active class is never applied (its helper is
+   registered on the wrong template), so the companion script adds
+   .ozw-current. .active is included so this keeps working once the app is fixed. */
+#offcanvasChatHistory .session-select.ozw-current,
+#offcanvasChatHistory .session-select.active {
+  /* Theme colours are read here, on the element, so dark mode gets its own
+     values. (Read in :root they'd be frozen to the light theme.) */
+  background: var(--ozw-current-chat-bg, var(--bs-primary-bg-subtle)) !important;
+  color: var(--bs-emphasis-color) !important;
+  box-shadow: inset 3px 0 0 var(--ozw-current-chat-accent, var(--bs-primary));
+}
+
+/* Delete button added by the companion script: on hover, top-right of the entry */
+#offcanvasChatHistory .session-select {
+  position: relative;
+}
+#offcanvasChatHistory .session-select .ozw-delete {
+  position: absolute;
+  top: 50%;
+  right: 0.25rem;
+  transform: translateY(-50%);
+  padding: 0.15rem 0.4rem;
+  border-radius: 0.375rem;
+  opacity: 0;
+  transition: opacity 0.15s ease-in-out, background-color 0.15s ease-in-out, color 0.15s ease-in-out;
+}
+/* Faded while hovering the entry; full strength while hovering (or focusing)
+   the button itself, with a soft red background. The icon shifts like a
+   Bootstrap link on hover: 20% toward black, or toward white in dark mode. */
+#offcanvasChatHistory .session-select:hover .ozw-delete {
+  opacity: 0.6;
+}
+#offcanvasChatHistory .session-select .ozw-delete:hover,
+#offcanvasChatHistory .session-select .ozw-delete:focus-visible {
+  opacity: 1;
+  background-color: rgba(var(--bs-danger-rgb), 0.12);
+  color: color-mix(in srgb, var(--bs-danger) 80%, black) !important;
+}
+[data-bs-theme="dark"] #offcanvasChatHistory .session-select .ozw-delete:hover,
+[data-bs-theme="dark"] #offcanvasChatHistory .session-select .ozw-delete:focus-visible {
+  color: color-mix(in srgb, var(--bs-danger) 80%, white) !important;
+}
+
+/* =====================================================================
+   Message "..." overflow menu
+   ===================================================================== */
+.message-overflow-dropdown {
+  width: max-content !important;     /* its wrapper is 0px wide; size to the labels */
+  min-width: var(--ozw-menu-min-width) !important;
+  max-width: 90vw !important;
+  padding: 0.25rem 0 !important;
+  font-size: var(--ozw-menu-font-size) !important;
+  line-height: 1.3 !important;
+  border-radius: 0.4rem !important;
+}
+
+/* Menu items and the "Copy as" scope row */
+.message-overflow-dropdown .dropdown-item,
+.message-overflow-dropdown .copy-scope-row {
+  padding: var(--ozw-menu-item-padding) !important;
+  min-height: 0 !important;
+  white-space: nowrap;
+}
+
+/* Icons in front of each entry and section header */
+.message-overflow-dropdown .dropdown-item > i:first-child,
+.message-overflow-dropdown .dropdown-header > i:first-child {
+  display: var(--ozw-menu-icons) !important;
+}
+
+/* Section headers, e.g. the WebChart brand and "Reprocess with model" */
+.message-overflow-dropdown .dropdown-header {
+  padding: 0.3rem 0.75rem 0.15rem !important;
+  font-size: 0.75rem !important;
+}
+
+.message-overflow-dropdown .dropdown-divider {
+  margin: 0.2rem 0 !important;
+}
+
+/* Non-button rows: the model badge and the rating row */
+.message-overflow-dropdown > li.px-3 {
+  padding: 0.2rem 0.75rem !important;
+}
+
+/* Model choices under "Reprocess with model" (the site indents them with ps-5) */
+.message-overflow-dropdown .dropdown-item.ps-5 {
+  padding-left: 1.75rem !important;
+}
+
+/* "…" button: exactly one line of message text tall, so it lines up with the text */
+.message-overflow-btn {
+  --ozw-line: calc(var(--ozw-text-size) * var(--ozw-text-line-height));
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box !important;
+  width: var(--ozw-line) !important;   /* square */
+  height: var(--ozw-line) !important;
+  padding: 0 !important;
+  border-width: 0 !important;   /* no 1px border, so the visible box is exactly one text line */
+  font-size: calc(var(--ozw-line) * 0.6) !important;  /* icon scales with the line */
+  line-height: 1 !important;
+}
+
+/* =====================================================================
+   Code blocks: alternating stripes and line numbers
+   ===================================================================== */
+/* Chat code blocks are .card > .card-body > pre.hljs > code */
+.message-area .card pre.hljs > code {
+  --ozw-code-row: calc(var(--ozw-code-line-height) * 1em);
+
+  display: block !important;
+  position: relative;
+  min-width: max-content;            /* stripes span the full scroll width */
+  width: 100%;
+  line-height: var(--ozw-code-line-height) !important;
+  padding-left: var(--ozw-code-gutter) !important;
+
+  /* Each stripe is exactly one line tall */
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0 var(--ozw-code-row),
+    var(--ozw-code-stripe) var(--ozw-code-row) calc(var(--ozw-code-row) * 2)
+  ) !important;
+}
+
+/* Line numbers: a pre-written column, cut off at the bottom of the block */
+.message-area .card pre.hljs > code::before {
+  content: "1\A 2\A 3\A 4\A 5\A 6\A 7\A 8\A 9\A 10\A 11\A 12\A 13\A 14\A 15\A 16\A 17\A 18\A 19\A 20\A 21\A 22\A 23\A 24\A 25\A 26\A 27\A 28\A 29\A 30\A 31\A 32\A 33\A 34\A 35\A 36\A 37\A 38\A 39\A 40\A 41\A 42\A 43\A 44\A 45\A 46\A 47\A 48\A 49\A 50\A 51\A 52\A 53\A 54\A 55\A 56\A 57\A 58\A 59\A 60\A 61\A 62\A 63\A 64\A 65\A 66\A 67\A 68\A 69\A 70\A 71\A 72\A 73\A 74\A 75\A 76\A 77\A 78\A 79\A 80\A 81\A 82\A 83\A 84\A 85\A 86\A 87\A 88\A 89\A 90\A 91\A 92\A 93\A 94\A 95\A 96\A 97\A 98\A 99\A 100\A 101\A 102\A 103\A 104\A 105\A 106\A 107\A 108\A 109\A 110\A 111\A 112\A 113\A 114\A 115\A 116\A 117\A 118\A 119\A 120\A 121\A 122\A 123\A 124\A 125\A 126\A 127\A 128\A 129\A 130\A 131\A 132\A 133\A 134\A 135\A 136\A 137\A 138\A 139\A 140\A 141\A 142\A 143\A 144\A 145\A 146\A 147\A 148\A 149\A 150\A 151\A 152\A 153\A 154\A 155\A 156\A 157\A 158\A 159\A 160\A 161\A 162\A 163\A 164\A 165\A 166\A 167\A 168\A 169\A 170\A 171\A 172\A 173\A 174\A 175\A 176\A 177\A 178\A 179\A 180\A 181\A 182\A 183\A 184\A 185\A 186\A 187\A 188\A 189\A 190\A 191\A 192\A 193\A 194\A 195\A 196\A 197\A 198\A 199\A 200";
+  display: var(--ozw-code-line-numbers);
+  position: absolute;
+  top: 0;
+  bottom: 0;                         /* stop at the last line of code */
+  left: 0;
+  width: calc(var(--ozw-code-gutter) - 1em);
+  overflow: hidden;                  /* hide numbers past the end of the code */
+  white-space: pre;
+  text-align: right;
+  line-height: inherit;
+  opacity: var(--ozw-code-number-opacity);
+  user-select: none;
+  pointer-events: none;
+}
+
+/* =====================================================================
+   User prompt bubbles: even vertical spacing
+   ===================================================================== */
+.message-bubble-wrapper-right .message-bubble {
+  display: flex !important;
+  flex-direction: column;
+  justify-content: center;
+  /* Exactly one text line plus padding, so a one-line prompt has no spare
+     space and its text sits evenly between the top and bottom padding. */
+  min-height: calc(var(--ozw-text-size) * var(--ozw-text-line-height)
+                   + 2 * var(--ozw-bubble-padding-y)) !important;
+  padding-top: var(--ozw-bubble-padding-y) !important;
+  padding-bottom: var(--ozw-bubble-padding-y) !important;
+}
+
+/* Narrower prompt bubbles, so wrapped prompts leave less empty space */
+.condensed-chat-view .message-bubble-wrapper-right {
+  max-width: var(--ozw-bubble-max-width) !important;
+}
+
+/* No outer margins on the first and last paragraph. *-of-type ignores the
+   "…" menu <div> that follows the text, which is what defeats the site's
+   p:last-child rule. */
+.message-bubble-wrapper-right .message-bubble > p:first-of-type {
+  margin-top: 0 !important;
+}
+.message-bubble-wrapper-right .message-bubble > p:last-of-type {
+  margin-bottom: 0 !important;
+}   
+   
+/* =====================================================================
+   "…" menu button on your prompts: below the bubble, bottom-right corner
+   (AI replies keep the site's placement)
+   ===================================================================== */
+/* The bubble's space is for text only: drop the 3.2rem right padding the site
+   reserves for the button, and leave one button-height of room underneath.
+   Repeated classes raise specificity above the site's own !important rule,
+   which is nested under .condensed-chat-view. */
+.condensed-chat-view .message-bubble-wrapper-right .message-bubble.message-bubble.message-bubble {
+  padding-right: 1rem !important;   /* mirrors the site's ps-3 on prompts */
+  overflow: visible !important;
+  margin-bottom: calc(var(--ozw-text-size) * var(--ozw-text-line-height)) !important;
+}
+
+/* The menu wrapper becomes a zero-size anchor at the bubble's bottom-right
+   corner (condensed view gives the bubble position: relative) */
+.message-bubble-wrapper-right .message-bubble > .message-overflow-menu {
+  position: absolute !important;
+  top: 100% !important;
+  right: 0 !important;
+  bottom: auto !important;
+  left: auto !important;
+  width: 0 !important;
+  height: 0 !important;
+  margin: 0 !important;
+}
+
+/* The button hangs from that corner, right-aligned with the bubble */
+.message-bubble-wrapper-right .message-bubble > .message-overflow-menu .message-overflow-btn {
+  top: 0 !important;
+  right: 0 !important;
+  bottom: auto !important;
+  left: auto !important;
+}
+
+/* Horizontal ellipsis instead of vertical (Font Awesome "ellipsis", f141) */
+.message-bubble-wrapper-right .message-overflow-btn .fa-ellipsis-vertical::before {
+  content: "\f141" !important;
+}
