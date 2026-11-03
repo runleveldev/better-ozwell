@@ -17,17 +17,13 @@ the earlier "Ozwell - Reading Comfort" Stylus style and Tampermonkey scripts:
 
 ## Install in Firefox (140+)
 
-Release Firefox only installs signed extensions permanently. Options:
+Open the `.xpi` from the [latest release](https://github.com/runleveldev/better-ozwell/releases/latest)
+in Firefox and accept the prompt. It's signed by Mozilla (unlisted, so it isn't
+listed on addons.mozilla.org) and **updates itself**: Firefox checks
+`updates.json` in this repo about once a day, or immediately via
+*about:addons → ⚙ → Check for Updates*.
 
-1. **Temporary (no signing):** `about:debugging#/runtime/this-firefox` →
-   *Load Temporary Add-on…* → pick `manifest.json` in this folder. Removed when
-   Firefox restarts.
-2. **Permanent, unsigned:** Firefox Developer Edition, Nightly or ESR with
-   `xpinstall.signatures.required` set to `false` in `about:config`, then install
-   the `.zip` from `npm run build` via *about:addons → ⚙ → Install Add-on From File*.
-3. **Permanent, signed:** submit the build to addons.mozilla.org as an
-   *unlisted* (self-distributed) add-on. Mozilla signs it without a public
-   listing and returns an `.xpi` you can install in any Firefox.
+Version 1.0.0 predates automatic updates; install 1.0.1 or later over it once.
 
 ## Install in Chrome / Edge (111+)
 
@@ -51,15 +47,16 @@ Ozwell tabs immediately. Style values are CSS (`800px`, `1.7`, `none`, …).
 
 ## Releases
 
-Push a tag matching the manifest version (`git tag v1.0.1 && git push origin v1.0.1`).
-`.github/workflows/release.yml` lints, signs the extension on addons.mozilla.org
-as unlisted, and attaches the signed `.xpi` to a GitHub release.
+1. Bump `version` in `manifest.json` and `package.json` (AMO won't sign a
+   version twice) and commit.
+2. Push a matching tag: `git tag v1.0.2 && git push origin v1.0.2`.
 
-- Needs repository secrets `AMO_JWT_ISSUER` and `AMO_JWT_SECRET` from
-  https://addons.mozilla.org/developers/addon/api/key/.
-- Bump `version` in `manifest.json` first; AMO won't sign a version twice.
-- Runs on a self-hosted runner (github.mieweb.com has no GitHub-hosted ones):
-  `runner/compose.yml` runs it in Docker; setup steps are in that file.
+`.github/workflows/release.yml` then lints, signs the extension on
+addons.mozilla.org as unlisted, creates a GitHub release with the `.xpi`, and
+adds it to `updates.json`, which installed copies poll.
+
+Needs repository secrets `AMO_JWT_ISSUER` and `AMO_JWT_SECRET` from
+https://addons.mozilla.org/developers/addon/api/key/.
 
 ## Development
 

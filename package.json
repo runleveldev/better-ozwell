@@ -1,16 +1,17 @@
 {
   "name": "better-ozwell",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "description": "Reading comfort tweaks and a debug popup for Ozwell (ozwell.ai)",
   "author": "Robert Gingras <rgingras@mieweb.com>",
   "license": "MIT",
   "scripts": {
-    "lint": "web-ext lint --ignore-files icons/icon.svg",
-    "build": "web-ext build --overwrite-dest --ignore-files icons/icon.svg README.md package.json .github",
+    "lint": "web-ext lint --ignore-files icons/icon.svg updates.json scripts",
+    "build": "web-ext build --overwrite-dest --ignore-files icons/icon.svg README.md package.json updates.json scripts .github",
     "start": "web-ext run --start-url https://app.ozwell.ai/"
   },
   "devDependencies": {
     "web-ext": "^8.0.0"
-  }
+  },
+  "repository": "github:runleveldev/better-ozwell"
 }

@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Better Ozwell",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Reading comfort tweaks for Ozwell (ozwell.ai), plus a debug popup with the model, context usage and conversation JSON.",
   "author": "Robert Gingras",
   "icons": {
@@ -11,12 +11,20 @@
     "96": "icons/icon-96.png",
     "128": "icons/icon-128.png"
   },
-  "permissions": ["storage"],
-  "host_permissions": ["https://ozwell.ai/*", "https://*.ozwell.ai/*"],
+  "permissions": [
+    "storage"
+  ],
+  "host_permissions": [
+    "https://ozwell.ai/*",
+    "https://*.ozwell.ai/*"
+  ],
   "action": {
     "default_title": "Better Ozwell",
     "default_popup": "popup/popup.html",
-    "default_icon": { "16": "icons/icon-16.png", "32": "icons/icon-32.png" }
+    "default_icon": {
+      "16": "icons/icon-16.png",
+      "32": "icons/icon-32.png"
+    }
   },
   "options_ui": {
     "page": "options/options.html",
@@ -24,28 +32,49 @@
   },
   "content_scripts": [
     {
-      "matches": ["https://ozwell.ai/*", "https://*.ozwell.ai/*"],
-      "js": ["common/settings.js", "content/bridge.js"],
+      "matches": [
+        "https://ozwell.ai/*",
+        "https://*.ozwell.ai/*"
+      ],
+      "js": [
+        "common/settings.js",
+        "content/bridge.js"
+      ],
       "run_at": "document_idle"
     },
     {
-      "matches": ["https://ozwell.ai/*", "https://*.ozwell.ai/*"],
-      "js": ["content/page.js"],
+      "matches": [
+        "https://ozwell.ai/*",
+        "https://*.ozwell.ai/*"
+      ],
+      "js": [
+        "content/page.js"
+      ],
       "run_at": "document_idle",
       "world": "MAIN"
     }
   ],
   "web_accessible_resources": [
     {
-      "resources": ["content/style.css"],
-      "matches": ["https://ozwell.ai/*", "https://*.ozwell.ai/*"]
+      "resources": [
+        "content/style.css"
+      ],
+      "matches": [
+        "https://ozwell.ai/*",
+        "https://*.ozwell.ai/*"
+      ]
     }
   ],
   "browser_specific_settings": {
     "gecko": {
       "id": "better-ozwell@rgingras.mieweb.com",
       "strict_min_version": "140.0",
-      "data_collection_permissions": { "required": ["none"] }
+      "data_collection_permissions": {
+        "required": [
+          "none"
+        ]
+      },
+      "update_url": "https://raw.githubusercontent.com/runleveldev/better-ozwell/main/updates.json"
     }
   }
 }

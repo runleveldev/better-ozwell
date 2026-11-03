@@ -1,9 +1,9 @@
 # Sign Better Ozwell as an unlisted (self-distributed) add-on on
-# addons.mozilla.org and attach the signed .xpi to a GitHub release.
+# addons.mozilla.org, attach the signed .xpi to a GitHub release, and add it to
+# updates.json so installed copies update themselves.
 #
 # Trigger: push a tag matching the manifest version, e.g.
-#   git tag v1.0.1 && git push origin v1.0.1
-# or run it by hand from the Actions tab.
+#   git tag v1.0.2 && git push origin v1.0.2
 #
 # Needs two repository secrets, from https://addons.mozilla.org/developers/addon/api/key/
 #   AMO_JWT_ISSUER  ("JWT issuer", like user:12345:67)
@@ -17,16 +17,13 @@ name: Sign and release
 on:
   push:
     tags: ['v*']
-  workflow_dispatch:
 
 permissions:
-  contents: write   # create the release and upload the .xpi
+  contents: write   # create the release and commit updates.json
 
 jobs:
   sign:
-    # Self-hosted runner from runner/compose.yml (github.mieweb.com has no
-    # GitHub-hosted runners)
-    runs-on: [self-hosted, better-ozwell]
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
@@ -35,16 +32,16 @@ jobs:
           node-version: 22
 
       - name: Check the tag matches manifest.json
-        if: startsWith(github.ref, 'refs/tags/')
         run: |
           manifest_version=$(node -p "require('./manifest.json').version")
           if [ "v$manifest_version" != "$GITHUB_REF_NAME" ]; then
             echo "::error::Tag $GITHUB_REF_NAME does not match manifest version $manifest_version"
             exit 1
           fi
+          echo "VERSION=$manifest_version" >> "$GITHUB_ENV"
 
       - name: Lint
-        run: npx --yes web-ext@8 lint --ignore-files icons/icon.svg --self-hosted
+        run: npx --yes web-ext@8 lint --ignore-files icons/icon.svg updates.json scripts --self-hosted
 
       - name: Sign on addons.mozilla.org (unlisted)
         env:
@@ -57,19 +54,35 @@ jobs:
           fi
           npx --yes web-ext@8 sign \
             --channel unlisted \
-            --ignore-files icons/icon.svg README.md package.json .github \
+            --ignore-files icons/icon.svg README.md package.json updates.json scripts .github \
             --artifacts-dir web-ext-artifacts \
             --approval-timeout 900000
+          cp web-ext-artifacts/*.xpi "better-ozwell-$VERSION.xpi"
 
-      - name: Attach to a GitHub release
-        if: startsWith(github.ref, 'refs/tags/')
+      # Keep a copy on the run even if a later step fails (AMO won't re-sign)
+      - uses: actions/upload-artifact@v4
+        with:
+          name: better-ozwell-${{ env.VERSION }}
+          path: better-ozwell-${{ env.VERSION }}.xpi
+
+      - name: Create the GitHub release
         env:
           GH_TOKEN: ${{ github.token }}
-          GH_HOST: github.mieweb.com   # gh defaults to github.com
         run: |
-          # (upload-artifact@v4 isn't supported on GitHub Enterprise Server, so the
-          # release is the only place the signed .xpi is kept)
-          cp web-ext-artifacts/*.xpi "better-ozwell-${GITHUB_REF_NAME#v}.xpi"
-          gh release create "$GITHUB_REF_NAME" "better-ozwell-${GITHUB_REF_NAME#v}.xpi" \
+          gh release create "$GITHUB_REF_NAME" "better-ozwell-$VERSION.xpi" \
             --title "Better Ozwell $GITHUB_REF_NAME" \
-            --notes "Signed by addons.mozilla.org (unlisted). Install by opening the .xpi in Firefox."
+            --notes "Signed by addons.mozilla.org (unlisted). Install by opening the .xpi in Firefox; it then updates itself."
+
+      - name: Add the release to updates.json
+        run: |
+          hash=$(sha256sum "better-ozwell-$VERSION.xpi" | cut -d' ' -f1)
+          git fetch --quiet origin main
+          git checkout --quiet -B main origin/main
+          node scripts/add-update.mjs "$VERSION" \
+            "https://github.com/$GITHUB_REPOSITORY/releases/download/$GITHUB_REF_NAME/better-ozwell-$VERSION.xpi" \
+            "sha256:$hash"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add updates.json
+          git commit -m "updates.json: $GITHUB_REF_NAME"
+          git push origin main
