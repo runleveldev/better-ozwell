@@ -6,6 +6,11 @@
           "version": "1.0.0",
           "update_link": "https://github.com/runleveldev/better-ozwell/releases/download/v1.0.0/better-ozwell-1.0.0.xpi",
           "update_hash": "sha256:9f185c3527bfc960735355a27f1951f2e301d2d453bff7b41f99269be6f2702d"
+        },
+        {
+          "version": "1.0.1",
+          "update_link": "https://github.com/runleveldev/better-ozwell/releases/download/v1.0.1/better-ozwell-1.0.1.xpi",
+          "update_hash": "sha256:258098ab8eb0e87fabcc4d9871f1cf0641d2d08f24414c9a6a94dd4ed09d82bd"
         }
       ]
     }
